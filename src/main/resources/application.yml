@@ -1,0 +1,56 @@
+server:
+  error:
+    include-exception: false
+  port: 8185
+
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: validate
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        temp: use_jdbc_metadata_defaults=false
+
+---
+spring:
+  config:
+    activate:
+      on-profile: default
+  datasource:
+    url: jdbc:mysql://ia-aws-rds.cbiofman7zlg.us-east-2.rds.amazonaws.com:3306/gateway_service
+    username: gateway_service_admin
+    password: YhqGR59MtlmW
+logging:
+  level:
+    com.musala.test.samplegatewayservice: trace
+    org.hibernate.SQL: trace
+
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+  datasource:
+    url: jdbc:mysql://localhost:3306/gateway_service
+    username: root
+    password: root
+  flyway:
+    enabled: false
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      javax:
+        persistence:
+          schema-generation:
+            create-source: metadata
+            scripts:
+              action: create
+              create-target: src/main/resources/ddl_jpa_creation.sql
+logging:
+  level:
+    com.musala.test.samplegatewayservice: trace
+    org.hibernate.SQL: trace
